@@ -1,9 +1,16 @@
-import { Resolver, Query, ResolveField, Parent, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  ResolveField,
+  Parent,
+  Args,
+  Mutation,
+} from '@nestjs/graphql';
 import { AuthorService } from './authors.service';
 import { AuthorDTO } from './authors.dto';
 import { BookService } from 'src/books/books.service';
 import { Author } from 'src/entities/author.entity';
-import { Book } from 'src/entities/book.entity';
+import { BookDTO } from 'src/books/books.dto';
 
 @Resolver(() => AuthorDTO)
 export class AuthorResolver {
@@ -13,12 +20,22 @@ export class AuthorResolver {
   ) {}
 
   @Query(() => AuthorDTO, { name: 'author' })
-  async getAuthor(@Args('id') id: number): Promise<AuthorDTO> {
-    return await this.authorService.getOne(id);
+  async getAuthors(): Promise<AuthorDTO[]> {
+    return await this.authorService.findAll();
   }
 
-  @ResolveField('book', () => [Book])
-  async getAuthorBooks(@Parent() author: Author): Promise<Book[]> {
+  @Mutation(() => AuthorDTO)
+  async createAuthor(@Args('name') name: string): Promise<AuthorDTO> {
+    return await this.authorService.create(name);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteAuthor(@Args('id') id: number): Promise<boolean> {
+    return await this.authorService.remove(id);
+  }
+
+  @ResolveField('book', () => [BookDTO])
+  async getAuthorBooks(@Parent() author: Author): Promise<BookDTO[]> {
     const { id } = author;
     return await this.bookService.findBookByAuthor(id);
   }

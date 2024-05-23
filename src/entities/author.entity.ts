@@ -1,13 +1,12 @@
-import { OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Book } from './book.entity';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
+@Entity()
 export class Author {
-  @Field(() => ID)
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
+  @Column()
   name: string;
 
   @OneToMany(() => Book, (book) => book.author, { cascade: true })

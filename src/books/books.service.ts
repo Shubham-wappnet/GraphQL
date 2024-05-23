@@ -8,10 +8,10 @@ export class BookService {
   constructor(
     @InjectRepository(Book) private readonly bookRepository: Repository<Book>,
   ) {}
-  async getAll(): Promise<Book[]> {
+  async findAll(): Promise<Book[]> {
     return await this.bookRepository.find();
   }
-  async getOne(id: number): Promise<Book> {
+  async findOne(id: number): Promise<Book> {
     return await this.bookRepository.findOne({ where: { id: id } });
   }
   async findBookByAuthor(id: number): Promise<Book[]> {

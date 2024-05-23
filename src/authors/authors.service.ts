@@ -2,6 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Author } from 'src/entities/author.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { AuthorDTO } from './authors.dto';
 
 @Injectable()
 export class AuthorService {
@@ -9,13 +10,13 @@ export class AuthorService {
     @InjectRepository(Author)
     private readonly authorRepository: Repository<Author>,
   ) {}
-  async getAll(): Promise<Author[]> {
+  async findAll(): Promise<Author[]> {
     return await this.authorRepository.find();
   }
-  async getOne(id: number): Promise<Author> {
+  async findOne(id: number): Promise<Author> {
     return await this.authorRepository.findOne({ where: { id: id } });
   }
-  async create(name: string): Promise<Author> {
+  async create(name: string): Promise<AuthorDTO> {
     const author = new Author();
     author.name = name;
     await this.authorRepository.save(author);

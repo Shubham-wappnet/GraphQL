@@ -14,55 +14,66 @@ import { AuthorDTO } from 'src/authors/authors.dto';
 import { Book } from 'src/entities/book.entity';
 import { Author } from 'src/entities/author.entity';
 import { createBookArgs } from './create-book.args';
-// import { BaseResolver } from 'src/resolver/base.resolver';
-// import { PubSub } from 'graphql-subscriptions';
+import { PubSub } from 'graphql-subscriptions';
 import { BookAdded } from './bookAdded.dto';
 
-//const pubSub = new PubSub();
+const pubSub = new PubSub();
 @Resolver(() => BookDTO)
 export class BookResolver {
   constructor(
     private readonly bookService: BookService,
     private readonly authorService: AuthorService,
-  ) {
-    // super(bookService);
-  }
+  ) {}
 
   @Query(() => [BookDTO])
   async getBooks(): Promise<Book[]> {
-    return await this.bookService.getAll();
+    return await this.bookService.findAll();
   }
+  // @Query(() => [BookDTO])
+  // book(): BookDTO[] {
+  //   return [
+  //     {
+  //       id: 1,
+  //       title: 'Sample Book',
+  //       authorId: 1,
+  //       author: {
+  //         id: 1,
+  //         name: 'Author Name',
+  //       },
+  //     },
+  //   ];
+  // }
 
   @Query(() => BookDTO)
   async getBooksByid(@Args('id') id: number): Promise<Book> {
-    const book = await this.bookService.getOne(id);
+    const book = await this.bookService.findOne(id);
     return book;
   }
 
-  //   @Mutation(() => BookDTO)
-  //   async createBook(@Args() args: createBookArgs): Promise<Book> {
-  //     const { title, authorId } = args;
-  //     const book = await this.bookService.create(title, authorId);
-  //     pubSub.publish('bookAdded', { bookAdded: book });
-  //     return book;
-  //   }
+  @Mutation(() => BookDTO)
+  async createBook(@Args() args: createBookArgs): Promise<Book> {
+    const { title, authorId } = args;
+    const book = await this.bookService.create(title, authorId);
+    pubSub.publish('bookAdded', { bookAdded: book });
+    return book;
+  }
 
-  //   @Mutation(() => Boolean)
-  //   async deleteBook(@Args('id') id: number): Promise<boolean> {
-  //     return await this.bookService.remove(id);
-  //   }
+  @Mutation(() => Boolean)
+  async deleteBook(@Args('id') id: number): Promise<boolean> {
+    return await this.bookService.remove(id);
+  }
 
   @ResolveField('author', () => AuthorDTO)
   async getAuthor(@Parent() book: BookDTO): Promise<Author> {
     const authorId = book.authorId;
-    return this.authorService.getOne(authorId);
+    return this.authorService.findOne(authorId);
   }
 
-  //   @Subscription(() => BookAdded, {
-  //     name: 'bookAdded',
-  //     resolve: (payload) => payload.bookAdded,
-  //   })
-  //   bookAdded() {
-  //     return pubSub.asyncIterator('bookAdded');
-  //   }
+  @Subscription(() => BookAdded, {
+    name: 'bookAdded',
+    resolve: (bk) => bk.bookAdded,
+  })
+  bookAdded() {
+    return pubSub.asyncIterator('bookAdded');
+  }
 }

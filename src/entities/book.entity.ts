@@ -1,16 +1,21 @@
-import { JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Author } from './author.entity';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
+@Entity()
 export class Book {
-  @Field(() => ID)
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
+  @Column()
   title: string;
 
-  @Field()
+  @Column()
   authorId: number;
 
   @ManyToOne(() => Author, (author) => author.book)

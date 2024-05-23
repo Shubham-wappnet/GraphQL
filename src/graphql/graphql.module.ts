@@ -18,6 +18,9 @@ import { Book } from 'src/entities/book.entity';
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
+      subscriptions: {
+        'graphql-ws': true,
+      },
     }),
   ],
   providers: [

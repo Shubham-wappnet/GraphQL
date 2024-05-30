@@ -29,23 +29,9 @@ export class BookResolver {
   async getBooks(): Promise<Book[]> {
     return await this.bookService.findAll();
   }
-  // @Query(() => [BookDTO])
-  // book(): BookDTO[] {
-  //   return [
-  //     {
-  //       id: 1,
-  //       title: 'Sample Book',
-  //       authorId: 1,
-  //       author: {
-  //         id: 1,
-  //         name: 'Author Name',
-  //       },
-  //     },
-  //   ];
-  // }
 
   @Query(() => BookDTO)
-  async getBooksByid(@Args('id') id: number): Promise<Book> {
+  async getBooksById(@Args('id') id: number): Promise<Book> {
     const book = await this.bookService.findOne(id);
     return book;
   }
@@ -71,7 +57,7 @@ export class BookResolver {
 
   @Subscription(() => BookAdded, {
     name: 'bookAdded',
-    resolve: (bk) => bk.bookAdded,
+    resolve: (payload) => payload.bookAdded,
   })
   bookAdded() {
     return pubSub.asyncIterator('bookAdded');

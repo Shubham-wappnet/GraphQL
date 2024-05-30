@@ -1,10 +1,10 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
 
 @ArgsType()
 export class createBookArgs {
   @Field()
   title: string;
 
-  @Field()
+  @Field(() => Int)
   authorId: number;
 }

@@ -1,13 +1,13 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
 export class BookAdded {
-  @Field()
+  @Field(() => Int)
   id: number;
 
   @Field()
   title: string;
 
-  @Field()
+  @Field(() => Int)
   authorId: number;
 }

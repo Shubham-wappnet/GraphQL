@@ -5,6 +5,7 @@ import {
   Parent,
   Args,
   Mutation,
+  Int,
 } from '@nestjs/graphql';
 import { AuthorService } from './authors.service';
 import { AuthorDTO } from './authors.dto';
@@ -38,5 +39,10 @@ export class AuthorResolver {
   async getAuthorBooks(@Parent() author: Author): Promise<BookDTO[]> {
     const { id } = author;
     return await this.bookService.findBookByAuthor(id);
+  }
+
+  @Query(() => AuthorDTO)
+  async author(@Args('id', { type: () => Int }) id: number): Promise<Author> {
+    return await this.authorService.findOne(id);
   }
 }

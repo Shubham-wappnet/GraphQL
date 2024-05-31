@@ -32,6 +32,7 @@ export class BookService {
     if (result.affected === 0) {
       throw new NotFoundException(`Book with id ${id} not found`);
     }
+    console.log(result);
     return true;
   }
 }

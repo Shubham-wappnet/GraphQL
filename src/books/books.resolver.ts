@@ -6,6 +6,7 @@ import {
   ResolveField,
   Parent,
   Subscription,
+  Int,
 } from '@nestjs/graphql';
 import { BookService } from './books.service';
 import { BookDTO } from './books.dto';
@@ -31,7 +32,9 @@ export class BookResolver {
   }
 
   @Query(() => BookDTO)
-  async getBooksById(@Args('id') id: number): Promise<Book> {
+  async getBooksById(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Book> {
     const book = await this.bookService.findOne(id);
     return book;
   }
@@ -45,7 +48,9 @@ export class BookResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteBook(@Args('id') id: number): Promise<boolean> {
+  async deleteBook(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<boolean> {
     return await this.bookService.remove(id);
   }
 

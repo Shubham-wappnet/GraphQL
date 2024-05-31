@@ -7,8 +7,8 @@ export class AuthorDTO {
   id: number;
 
   @Field({ nullable: true })
-  name?: string;
+  name: string;
 
   @Field(() => [BookDTO], { nullable: true })
-  book?: BookDTO[];
+  book: BookDTO[];
 }

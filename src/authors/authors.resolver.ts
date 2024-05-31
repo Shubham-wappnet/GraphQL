@@ -19,8 +19,8 @@ export class AuthorResolver {
     private readonly bookService: BookService,
   ) {}
 
-  @Query(() => AuthorDTO, { name: 'author' })
-  async getAuthors(): Promise<AuthorDTO[]> {
+  @Query(() => AuthorDTO)
+  async getAuthors(): Promise<Author[]> {
     return await this.authorService.findAll();
   }
 
